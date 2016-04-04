@@ -4,7 +4,7 @@
 
     <groupId>com.oneandone</groupId>
     <artifactId>composite-jks</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <name>CompositeJKS</name>
     <description>Load a custom Java Keystore into the SSL Context without replacing the system CA list.</description>
