@@ -119,13 +119,13 @@
             </activation>
             <distributionManagement>
                 <repository>
-                    <id>artifactory.1and1.org</id>
-                    <name>artifactory.1and1.org-hosting-releases</name>
+                    <id>artifactory-release</id>
+                    <name>1and1 Internal Artifactory Release Repository</name>
                     <url>https://artifactory.1and1.org/artifactory/hosting-release</url>
                 </repository>
                 <snapshotRepository>
-                    <id>artifactory.1and1.org</id>
-                    <name>artifactory.1and1.org-hosting-snapshots</name>
+                    <id>artifactory</id>
+                    <name>1and1 Internal Artifactory Snapshot Repository</name>
                     <url>https://artifactory.1and1.org/artifactory/hosting-snapshot</url>
                 </snapshotRepository>
             </distributionManagement>
