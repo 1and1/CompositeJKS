@@ -56,7 +56,9 @@ public class CompositeX509KeyManager implements X509KeyManager {
         return merge(x -> x.getServerAliases(keyType, issuers));
     }
 
-    private <TOut> TOut[] merge(Function<X509KeyManager, TOut[]> map) {
-        return (TOut[]) children.flatMap(x -> stream(map.apply(x))).toArray();
+    private String[] merge(Function<X509KeyManager, String[]> map) {
+        return children
+                .flatMap(x -> stream(map.apply(x)))
+                .toArray(size -> new String[size]);
     }
 }
