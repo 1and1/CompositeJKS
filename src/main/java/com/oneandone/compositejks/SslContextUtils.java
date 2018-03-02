@@ -56,6 +56,12 @@ public final class SslContextUtils {
     }
 
     /**
+     * The key manager algorithm to use for X509. You may need to modify this
+     * if you are using a non-Oracle JDK.
+     */
+    public static String X509Algorithm = "SunX509";
+
+    /**
      * Generates an SSL context that uses a merged view of the system key store
      * and a custom key store.
      *
@@ -68,11 +74,11 @@ public final class SslContextUtils {
         String defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm();
 
         KeyManager[] keyManagers = {new CompositeX509KeyManager(
-            getSystemKeyManager("SunX509", keyStore, null),
+            getSystemKeyManager(X509Algorithm, keyStore, null),
             getSystemKeyManager(defaultAlgorithm, null, null))};
 
         TrustManager[] trustManagers = {new CompositeX509TrustManager(
-            getSystemTrustManager("SunX509", keyStore),
+            getSystemTrustgetSystemKeyManagerManager(X509Algorithm, keyStore),
             getSystemTrustManager(defaultAlgorithm, null))};
 
         SSLContext context = SSLContext.getInstance("SSL");
