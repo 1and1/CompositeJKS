@@ -78,7 +78,7 @@ public final class SslContextUtils {
             getSystemKeyManager(defaultAlgorithm, null, null))};
 
         TrustManager[] trustManagers = {new CompositeX509TrustManager(
-            getSystemTrustgetSystemKeyManagerManager(X509Algorithm, keyStore),
+            getSystemTrustManager(X509Algorithm, keyStore),
             getSystemTrustManager(defaultAlgorithm, null))};
 
         SSLContext context = SSLContext.getInstance("SSL");
