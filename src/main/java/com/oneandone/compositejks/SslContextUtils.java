@@ -71,15 +71,29 @@ public final class SslContextUtils {
      */
     public static SSLContext buildMergedWithSystem(KeyStore keyStore)
             throws GeneralSecurityException {
+        return buildMergedWithSystem(keyStore, null);
+    }
+
+    /**
+     * Generates an SSL context that uses a merged view of the system key store
+     * and a custom key store.
+     *
+     * @param keyStore The custom key store.
+     * @param password The password of the custom key store.
+     * @return The SSL context
+     * @throws GeneralSecurityException
+     */
+    public static SSLContext buildMergedWithSystem(KeyStore keyStore, char[] password)
+            throws GeneralSecurityException {
         String defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm();
 
         KeyManager[] keyManagers = {new CompositeX509KeyManager(
-            getSystemKeyManager(X509Algorithm, keyStore, null),
-            getSystemKeyManager(defaultAlgorithm, null, null))};
+                getSystemKeyManager(X509Algorithm, keyStore, password),
+                getSystemKeyManager(defaultAlgorithm, null, null))};
 
         TrustManager[] trustManagers = {new CompositeX509TrustManager(
-            getSystemTrustManager(X509Algorithm, keyStore),
-            getSystemTrustManager(defaultAlgorithm, null))};
+                getSystemTrustManager(X509Algorithm, keyStore),
+                getSystemTrustManager(defaultAlgorithm, null))};
 
         SSLContext context = SSLContext.getInstance("SSL");
         context.init(keyManagers, trustManagers, null);
