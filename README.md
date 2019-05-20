@@ -1,3 +1,31 @@
+# Changes in this fork
+
+This fork fixes some issues of the original library ([#4](https://github.com/1and1/CompositeJKS/issues/4) and [#7](https://github.com/1and1/CompositeJKS/issues/7)) introduces a new Builder API with `SslContextBuilder.builder()` which allows more flexible configuration ([#6](https://github.com/1and1/CompositeJKS/issues/6)).
+
+Example 1:
+```
+SslContextBuilder.builder()
+                 .keyStoreFromFile("key store path without pwd")
+                 .usingProtocol("SSL")
+                 .usingSunX509()
+                 .usingKeyManagerPassword("key manager pwd")
+                 .buildMergedWithSystemAndSetDefault();
+```
+
+Example 2:
+```
+SslContextBuilder.builder()
+                 .keyStoreFromFile(keyStorePath, keyStorePwd)
+                 .usingTLS()
+                 .usingDefaultAlgorithm()
+                 .usingKeyManagerPasswordFromKeyStore()
+                 .buildMergedWithSystem();
+```
+
+*Below is original README*
+
+------
+
 # CompositeJKS
 
 Load a custom [Java KeyStore](https://docs.oracle.com/cd/E19509-01/820-3503/ggfen/index.html) into the SSL Context without replacing the system CA list.
