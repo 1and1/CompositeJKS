@@ -17,7 +17,10 @@ import static java.util.Arrays.stream;
 
 /**
  * Utility methods for {@link SSLContext}.
+ *
+ * @deprecated Use the new API with {@link SslContextBuilder#builder()}.
  */
+@Deprecated
 public final class SslContextUtils {
 
     private SslContextUtils() {

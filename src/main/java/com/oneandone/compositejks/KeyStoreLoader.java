@@ -10,7 +10,10 @@ import java.security.KeyStore;
  * Utility methods for loading {@link KeyStore}s.
  *
  * @author Bastian
+ *
+ * @deprecated Use the new API with {@link SslContextBuilder#builder()}.
  */
+@Deprecated
 public final class KeyStoreLoader {
 
     private KeyStoreLoader() {
