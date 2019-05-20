@@ -1,10 +1,18 @@
 package com.oneandone.compositejks;
 
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509KeyManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
-import javax.net.ssl.*;
+import java.util.Arrays;
+
 import static java.util.Arrays.stream;
 
 /**
@@ -88,12 +96,16 @@ public final class SslContextUtils {
         String defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm();
 
         KeyManager[] keyManagers = {new CompositeX509KeyManager(
-                getSystemKeyManager(X509Algorithm, keyStore, password),
-                getSystemKeyManager(defaultAlgorithm, null, null))};
+                Arrays.asList(
+                        getSystemKeyManager(X509Algorithm, keyStore, password),
+                        getSystemKeyManager(defaultAlgorithm, null, null)))
+        };
 
         TrustManager[] trustManagers = {new CompositeX509TrustManager(
-                getSystemTrustManager(X509Algorithm, keyStore),
-                getSystemTrustManager(defaultAlgorithm, null))};
+                Arrays.asList(
+                        getSystemTrustManager(X509Algorithm, keyStore),
+                        getSystemTrustManager(defaultAlgorithm, null)))
+        };
 
         SSLContext context = SSLContext.getInstance("SSL");
         context.init(keyManagers, trustManagers, null);

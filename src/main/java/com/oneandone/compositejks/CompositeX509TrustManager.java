@@ -1,12 +1,10 @@
 package com.oneandone.compositejks;
 
-import java.util.List;
-import java.util.function.Function;
-import java.security.cert.X509Certificate;
-import java.security.cert.CertificateException;
 import javax.net.ssl.X509TrustManager;
-import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Merges multiple {@link X509TrustManager}s into a delegating composite.
@@ -15,33 +13,32 @@ public class CompositeX509TrustManager implements X509TrustManager {
 
     private final List<X509TrustManager> children;
 
-    public CompositeX509TrustManager(X509TrustManager... children) {
-        this.children = asList(children);
+    public CompositeX509TrustManager(List<X509TrustManager> children) {
+        this.children = children;
     }
 
     @Override
     public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-        CertificateException lastError = null;
-        for (X509TrustManager trustManager : children) {
-            try {
-                trustManager.checkClientTrusted(chain, authType);
-                return;
-            } catch (CertificateException ex) {
-                lastError = ex;
-            }
-        }
-
-        if (lastError != null) {
-            throw lastError;
-        }
+        checkTrusted(x -> x.checkClientTrusted(chain, authType));
     }
 
     @Override
     public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        checkTrusted(x -> x.checkServerTrusted(chain, authType));
+    }
+
+    @Override
+    public X509Certificate[] getAcceptedIssuers() {
+        return children.stream()
+                       .flatMap(x -> Arrays.stream(x.getAcceptedIssuers()))
+                       .toArray(X509Certificate[]::new);
+    }
+
+    private void checkTrusted(ThrowingProcessor processor) throws CertificateException {
         CertificateException lastError = null;
-        for (X509TrustManager trustManager : children) {
+        for (X509TrustManager manager : children) {
             try {
-                trustManager.checkServerTrusted(chain, authType);
+                processor.process(manager);
                 return;
             } catch (CertificateException ex) {
                 lastError = ex;
@@ -53,13 +50,8 @@ public class CompositeX509TrustManager implements X509TrustManager {
         }
     }
 
-    @Override
-    public X509Certificate[] getAcceptedIssuers() {
-        return merge(x -> x.getAcceptedIssuers());
-    }
+    private interface ThrowingProcessor {
 
-    private X509Certificate[] merge(Function<X509TrustManager, X509Certificate[]> map) {
-        return children.stream().flatMap(x -> stream(map.apply(x)))
-                .toArray(x -> new X509Certificate[x]);
+        void process(X509TrustManager manager) throws CertificateException;
     }
 }
