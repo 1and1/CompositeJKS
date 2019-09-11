@@ -22,6 +22,34 @@ SslContextBuilder.builder()
                  .buildMergedWithSystem();
 ```
 
+## How to use it?
+
+This fork is not pushed to Maven central... yet. But still you can use it via [jitpack.io](https://jitpack.io/docs/).
+
+Add the jitpack repository to your maven repositories:
+
+ ```
+<repositories>
+    ...
+    <repository>
+        <id>JitPack</id>
+        <url>https://jitpack.io</url>
+    </repository>
+    ...
+</repositories>
+ ```
+
+Then, add the following to your pom.xml (use any version from [github releases page](https://github.com/goekay/CompositeJKS/releases)):
+
+ ```
+<dependency>
+    <groupId>com.github.goekay</groupId>
+    <artifactId>CompositeJKS</artifactId>
+    <version>2.0</version>
+</dependency>
+ ```
+
+
 *Below is original README*
 
 ------
