@@ -14,10 +14,10 @@ import static java.util.Arrays.stream;
  */
 public class CompositeX509KeyManager implements X509KeyManager {
 
-    private final Stream<X509KeyManager> children;
+    private final X509KeyManager[] children;
 
     public CompositeX509KeyManager(X509KeyManager... children) {
-        this.children = stream(children);
+        this.children = children;
     }
 
     @Override
@@ -41,7 +41,8 @@ public class CompositeX509KeyManager implements X509KeyManager {
     }
 
     private <TOut> TOut getFirstNonNull(Function<X509KeyManager, TOut> map) {
-        return children.map(map)
+        return stream(children)
+                .map(map)
                 .filter(x -> x != null)
                 .findFirst().orElse(null);
     }
@@ -57,7 +58,7 @@ public class CompositeX509KeyManager implements X509KeyManager {
     }
 
     private String[] merge(Function<X509KeyManager, String[]> map) {
-        return children
+        return stream(children)
                 .flatMap(x -> stream(map.apply(x)))
                 .toArray(size -> new String[size]);
     }
